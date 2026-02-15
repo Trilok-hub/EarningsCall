@@ -1,0 +1,11 @@
+[build]
+  # Build from the frontend folder, run the frontend build, and publish Vite's output
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
