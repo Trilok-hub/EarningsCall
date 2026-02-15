@@ -1,0 +1,234 @@
+/* -------------------------------------------------- */
+/* 1. GLOBAL CENTERING & RESET                       */
+/* -------------------------------------------------- */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --success: #10b981;
+  --danger: #ef4444;
+  --radius: 12px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+/* FIX: Force React root to take full width and center children */
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem; /* Top/Bottom padding for the page */
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  line-height: 1.5;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+/* -------------------------------------------------- */
+/* 2. MAIN CONTAINER (Centered Box)                  */
+/* -------------------------------------------------- */
+.app-container {
+  width: 100%;
+  max-width: 1000px; /* Controls max width on Desktop */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  /* margin: 0 auto;  <-- Redundant if #root centers, but good for safety */
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+/* -------------------------------------------------- */
+/* 3. UPLOAD SECTION                                 */
+/* -------------------------------------------------- */
+.upload-section {
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 2px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the button and input */
+  justify-content: center;
+  gap: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.upload-section:hover {
+  border-color: var(--primary);
+}
+
+input[type="file"] {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  cursor: pointer;
+}
+
+.analyze-btn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.85rem 3rem; /* Wider button */
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.analyze-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: var(--danger);
+  background: #fee2e2;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* -------------------------------------------------- */
+/* 4. RESULTS GRID                                   */
+/* -------------------------------------------------- */
+.results-grid {
+  display: grid;
+  /* Columns will stretch to fill space, min 320px wide */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Spans full width on desktop */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.card {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures cards are same height in a row */
+}
+
+.card h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* List Styles */
+.list-group {
+  list-style: none;
+  padding: 0;
+}
+
+.list-group li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--background);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+
+.list-group li:last-child {
+  border-bottom: none;
+}
+
+.list-group li::before {
+  content: "•";
+  font-weight: bold;
+  margin-right: 0.6rem;
+  font-size: 1.2rem;
+  line-height: 1rem;
+}
+
+/* Green bullets for positives, Red for negatives */
+.card:has(h3[style*="success"]) li::before { color: var(--success); }
+.card:has(h3[style*="danger"]) li::before { color: var(--danger); }
+.card li::before { color: var(--primary); } /* Default blue */
+
+/* -------------------------------------------------- */
+/* 5. RESPONSIVE BREAKPOINTS                         */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  .upload-section {
+    padding: 1.5rem;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr; /* Force single column on mobile */
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+}
